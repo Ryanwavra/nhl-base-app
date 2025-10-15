@@ -1,11 +1,29 @@
 [
   {
-    "gameId": 2024020001,
-    "homeTeam": "Rangers",
-    "awayTeam": "Bruins",
-    "homeScore": 3,
-    "awayScore": 2,
-    "winner": "Rangers",
-    "status": "FINAL"
+    "game_id": 201,
+    "home_team": "NYI",
+    "away_team": "NJD",
+    "home_score": 3,
+    "away_score": 2,
+    "status": "Final",
+    "winner": "NYI"
+  },
+  {
+    "game_id": 202,
+    "home_team": "TOR",
+    "away_team": "BOS",
+    "home_score": 1,
+    "away_score": 4,
+    "status": "Final",
+    "winner": "BOS"
+  },
+  {
+    "game_id": 203,
+    "home_team": "MTL",
+    "away_team": "OTT",
+    "home_score": 2,
+    "away_score": 2,
+    "status": "Final",
+    "winner": "Draw"
   }
 ]

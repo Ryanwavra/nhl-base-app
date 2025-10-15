@@ -1,11 +1,18 @@
-class ApiClient:
+import json
+from typing import List, Dict, Optional
+from pathlib import Path
 
-    def get_upcoming_games(self, date=None):
-        #later: load and return upcoming games.json
+class MockAPIClient:
+    def __init__(self, fixtures_dir: str = "tests/fixtures"):
+        self.fixtures_dir = Path(fixtures_dir)
 
-        pass
+    def _load_fixture(self, filename: str):
+        filepath = self.fixtures_dir / filename
+        with open(filepath, "r", encoding="utf-8") as f:
+            return json.load(f)
 
-    def get_completed_games(self, date=None):
-        #later load and return completed games json
+    def get_upcoming_games(self, date: Optional[str] = None) -> List[Dict]:
+        return self._load_fixture("upcoming_games.json")
 
-        pass
+    def get_completed_games(self, date: Optional[str] = None) -> List[Dict]:
+        return self._load_fixture("completed_games.json")
