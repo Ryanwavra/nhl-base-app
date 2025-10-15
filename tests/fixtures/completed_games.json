@@ -1,0 +1,11 @@
+[
+  {
+    "gameId": 2024020001,
+    "homeTeam": "Rangers",
+    "awayTeam": "Bruins",
+    "homeScore": 3,
+    "awayScore": 2,
+    "winner": "Rangers",
+    "status": "FINAL"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "gameId": 2024020001,
+    "homeTeam": "Rangers",
+    "awayTeam": "Bruins",
+    "startTime": "2025-10-15T23:00:00Z",
+    "status": "SCHEDULED"
+  },
+  {
+    "gameId": 2024020002,
+    "homeTeam": "Maple Leafs",
+    "awayTeam": "Canadiens",
+    "startTime": "2025-10-15T23:30:00Z",
+    "status": "SCHEDULED"
+  }
+]
