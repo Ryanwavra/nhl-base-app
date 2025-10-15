@@ -45,16 +45,38 @@ class NHLApiClient:
         return parse_schedule(raw)
 
     def get_today_games(self) -> list[ScheduledGame]:
-        today = date.today().isoformat()
-        raw = self.get_schedule_by_date(today)
+        today = date.today()
+        raw = self.get_schedule_by_date(today.isoformat())
         all_games = parse_schedule(raw)
-        return [g for g in all_games if g.start_time and g.start_time[:10] == today]
+
+        local_tz = tzlocal.get_localzone()
+        today_games = []
+
+        for g in all_games:
+            if g.start_time:
+                utc_dt = datetime.fromisoformat(g.start_time.replace("Z", "+00:00"))
+                local_dt = utc_dt.astimezone(local_tz)
+                if local_dt.date() == today:
+                    today_games.append(g)
+
+        return today_games
 
     def get_tomorrow_games(self) -> list[ScheduledGame]:
-        tomorrow = (date.today() + timedelta(days=1)).isoformat()
-        raw = self.get_schedule_by_date(tomorrow)
+        tomorrow = date.today() + timedelta(days=1)
+        raw = self.get_schedule_by_date(tomorrow.isoformat())
         all_games = parse_schedule(raw)
-        return [g for g in all_games if g.start_time and g.start_time[:10] == tomorrow]
+
+        local_tz = tzlocal.get_localzone()
+        tomorrow_games = []
+
+        for g in all_games:
+            if g.start_time:
+                utc_dt = datetime.fromisoformat(g.start_time.replace("Z", "+00:00"))
+                local_dt = utc_dt.astimezone(local_tz)
+                if local_dt.date() == tomorrow:
+                    tomorrow_games.append(g)
+
+        return tomorrow_games
 
     def get_parsed_scores(self) -> list[GameScore]:
         raw = self.get_live_scores()
