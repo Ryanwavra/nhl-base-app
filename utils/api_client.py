@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 import tzlocal
 
 from models.scheduled_game_model import ScheduledGame, parse_schedule
-from models.game_scores_model import GameScore, parse_scores_now
+from models.live_scores_model import GameScore, parse_scores_now
 
 load_dotenv()
 
@@ -29,9 +29,9 @@ class NHLApiClient:
             print(f"Error fetching schedule for {date}: {e}")
             return {}
 
-    def get_scores_now(self) -> Dict[str, Any]:
+    def get_live_scores(self) -> Dict[str, Any]:
         """Fetch live scores and game status for today."""
-        url = f"{self.base_url}/score/now"
+        url = f"{self.base_url}/scoreboard/now"
         try:
             response = requests.get(url, timeout=5)
             response.raise_for_status()
@@ -56,10 +56,9 @@ class NHLApiClient:
         all_games = parse_schedule(raw)
         return [g for g in all_games if g.start_time and g.start_time[:10] == tomorrow]
 
-
     def get_parsed_scores(self) -> list[GameScore]:
-            raw = self.get_scores_now()
-            return parse_scores_now(raw)
+        raw = self.get_live_scores()
+        return parse_scores_now(raw)
 
     def convert_utc_to_local(self, utc_str: str) -> str:
         try:
