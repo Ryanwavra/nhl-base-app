@@ -1,7 +1,6 @@
 from utils.api_client import NHLApiClient
 from models.live_scores_model import parse_live_scores, should_show_game
 from models.user_pick_model import PickManager, UserPick
-from utils.api_client import NHLApiClient
 from models.pick_evaluator import (
     evaluate_user_picks,
     get_highest_scoring_game_total,
@@ -85,19 +84,22 @@ def main():
         client = NHLApiClient()
         pick_manager = PickManager()
 
-        # Step 1: Get final scores
         raw_scores = client.get_live_scores()
         final_scores = parse_live_scores(raw_scores)
 
-        # Step 2: Evaluate picks
         submissions = pick_manager.submissions
-        results = evaluate_user_picks(submissions, final_scores)
+        if not submissions:
+            print("⚠️ No user submissions found.")
+            return
 
-        # Step 3: Find top scorers
+        results = evaluate_user_picks(submissions, final_scores)
+        if not results:
+            print("⚠️ No completed games to evaluate.")
+            return
+
         max_correct = max(results.values())
         tied_users = [submissions[uid] for uid, score in results.items() if score == max_correct]
 
-        # Step 4: Resolve tiebreaker if needed
         if len(tied_users) > 1:
             actual_total = get_highest_scoring_game_total(final_scores)
             winners = resolve_tiebreaker(tied_users, actual_total)
@@ -105,9 +107,6 @@ def main():
             print(f"🥇 Winner(s): {', '.join(winners)}")
         else:
             print(f"\n🥇 Winner: {tied_users[0].user_id}")
-
-    if __name__ == "__main__":
-        main()
 
 
 if __name__ == "__main__":
