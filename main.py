@@ -1,9 +1,9 @@
 from utils.api_client import NHLApiClient
 from models.live_scores_model import parse_live_scores, should_show_game
+from models.user_pick_model import PickManager, UserPick
 
-client = NHLApiClient()
-
-def display_schedule():
+#display game schedule
+def display_schedule(client):
     today_games = client.get_today_games()
     tomorrow_games = client.get_tomorrow_games()
 
@@ -23,7 +23,8 @@ def display_schedule():
     else:
         print("No games scheduled tomorrow.")
 
-def display_visible_scores():
+#display live and completed game scores
+def display_visible_scores(client):
     raw = client.get_live_scores()
     scores = parse_live_scores(raw)
     visible_scores = [s for s in scores if should_show_game(s)]
@@ -37,6 +38,41 @@ def display_visible_scores():
     else:
         print("No live or recently completed games available.")
 
+#Receive and store user input
+def get_user_input(today_games):
+    user_id = input("Enter your user ID: ")
+    picks = []
+
+    print("\nToday's Games:")
+    for game in today_games:
+        print(f"{game.game_id}: {game.away_team} @ {game.home_team}")
+        team = input(f"Pick winner for {game.game_id}: ")
+        picks.append(UserPick(game_id=game.game_id, picked_team=team))
+
+    tiebreaker = int(input("Enter your tiebreaker guess (total goals in highest scoring game): "))
+    return user_id, picks, tiebreaker
+
+def main():
+    client = NHLApiClient()
+    pick_manager = PickManager()
+
+    display_schedule(client)
+    display_visible_scores(client)
+
+    today_games = client.get_today_games()
+    if not today_games:
+        print("\nNo games today — skipping pick submission.")
+        return
+
+    user_id, picks, tiebreaker = get_user_input(today_games)
+    success = pick_manager.submit_picks(user_id, picks, tiebreaker)
+
+    if success:
+        submission = pick_manager.get_submission(user_id)
+        print("\n✅ Submission stored:")
+        print(submission)
+    else:
+        print("\n❌ Submission failed. Please check your inputs.")
+
 if __name__ == "__main__":
-    display_schedule()
-    display_visible_scores()
+    main()

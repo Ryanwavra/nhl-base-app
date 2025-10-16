@@ -1,0 +1,8 @@
+{
+  "user_id": "ryan123",
+  "picks": [
+    {"game_id": "20251015-TOR-DET", "picked_team": "TOR"},
+    {"game_id": "20251015-BOS-NYR", "picked_team": "NYR"}
+  ],
+  "tiebreaker_guess": 9
+}
