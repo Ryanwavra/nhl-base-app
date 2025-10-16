@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NHL Pick'em - Home</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="fc:miniapp" content='{"name": "NHL Pick\'em", "icon": "puck", "url": "http://localhost:8080"}'>
+</head>
+<body>
+  <header>
+    <h1>🏒 NHL Pick'em</h1>
+    <div id="countdown">Picks lock in: Loading...</div>
+    <section class="stats-section">
+      <p id="players-entered">0 Players Entered</p>
+      <p id="current-pot">Current Pot: $0</p>
+      <button class="make-picks-btn" onclick="window.location.href='picks.html'">Make Your Picks</button>
+    </section>
+  </header>
+  <main>
+    <section class="how-it-works">
+      <h2>HOW IT WORKS</h2>
+      <p>1. Pick winners for all games for the day</p>
+      <p>2. Pay entry fee in USDC on Base</p>
+      <p>3. Picks lock prior to first puck drop of the day</p>
+      <p>4. Winner takes the pot (ties split evenly)</p>
+    </section>
+  </main>
+  <nav>
+    <a href="index.html" title="Home">🏠<span>Home</span></a>
+    <a href="picks.html" title="Picks">🎯<span>Picks</span></a>
+    <a href="rankings.html" title="Rankings">🏆<span>Rankings</span></a>
+    <a href="profile.html" title="Profile">👤<span>Profile</span></a>
+  </nav>
+  <script type="module">
+    import { updatePotDisplay, startCountdown } from './app.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      updatePotDisplay();
+      startCountdown();
+    });
+  </script>
+</body>
+</html>

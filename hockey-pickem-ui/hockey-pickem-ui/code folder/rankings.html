@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NHL Puck Pot - Rankings</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="fc:miniapp" content='{"name": "NHL Pick\'em", "icon": "puck", "url": "http://localhost:8080/rankings.html"}'>
+</head>
+<body>
+  <header>
+    <h1>🏒 Rankings</h1>
+  </header>
+  <main>
+    <section class="leaderboard">
+      <h3>Today's Leaderboard</h3>
+      <ul id="daily-leaderboard"></ul>
+      <h3>All-Time Leaderboard</h3>
+      <ul id="all-time-leaderboard"></ul>
+    </section>
+  </main>
+  <nav>
+    <a href="index.html" title="Home">🏠<span>Home</span></a>
+    <a href="picks.html" title="Picks">🎯<span>Picks</span></a>
+    <a href="rankings.html" title="Rankings">🏆<span>Rankings</span></a>
+    <a href="profile.html" title="Profile">👤<span>Profile</span></a>
+  </nav>
+  <script type="module">
+    import { updatePotDisplay } from './app.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('daily-leaderboard').innerHTML = `
+        <ol>User1: 2 points</ol>
+        <ol>User2: 1 point</ol>
+      `;
+      document.getElementById('all-time-leaderboard').innerHTML = `
+        <ol>User1: 10 points</ol>
+        <ol>User3: 8 points</ol>
+      `;
+    });
+  </script>
+</body>
+</html>

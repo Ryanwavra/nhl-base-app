@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NHL Pick'em - Profile</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="fc:miniapp" content='{"name": "NHL Pick\'em", "icon": "puck", "url": "http://localhost:8080/profile.html"}'>
+</head>
+<body>
+  <header>
+    <h1>🏒 Your Profile</h1>
+    <img src="https://via.placeholder.com/100" class="pfp" alt="Profile Picture">
+    <div class="username">@tylerkenney</div>
+    <button id="invite-btn">Invite Friends</button>
+    <div id="total-pot">Total Pot: $0 (0 players)</div>
+  </header>
+  <main>
+    <section>
+      <p>Bets Won: <span id="bets-won">0</span></p>
+      <p>Open Bets: <span id="open-bets">0</span></p>
+      <p>Earnings: <span id="earnings">$0</span></p>
+    </section>
+  </main>
+  <nav>
+    <a href="index.html" title="Home">🏠<span>Home</span></a>
+    <a href="picks.html" title="Picks">🎯<span>Picks</span></a>
+    <a href="rankings.html" title="Rankings">🏆<span>Rankings</span></a>
+    <a href="profile.html" title="Profile">👤<span>Profile</span></a>
+  </nav>
+  <script type="module">
+    import { updatePotDisplay } from './app.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      updatePotDisplay();
+      document.getElementById('invite-btn').onclick = () => {
+        alert("Referral link: https://nhl-pickem-ui.vercel.app?ref=tyler");
+      };
+      document.getElementById('bets-won').innerText = "2";
+      document.getElementById('open-bets').innerText = "1";
+      document.getElementById('earnings').innerText = "$5";
+    });
+  </script>
+</body>
+</html>

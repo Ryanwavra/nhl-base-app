@@ -1,0 +1,12 @@
+{
+  "name": "hockey-pickem-ui",
+  "version": "1.0.0",
+  "description": "Hockey pickem mini app for farcaster",
+  "license": "ISC",
+  "author": "Tyler Kenney",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
