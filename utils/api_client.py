@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 import tzlocal
 
 from models.scheduled_game_model import ScheduledGame, parse_schedule
-from models.live_scores_model import GameScore, parse_scores_now
+from models.live_scores_model import LiveScore, parse_live_scores
 
 load_dotenv()
 
@@ -78,9 +78,9 @@ class NHLApiClient:
 
         return tomorrow_games
 
-    def get_parsed_scores(self) -> list[GameScore]:
+    def get_parsed_live_scores(self) -> list[LiveScore]:
         raw = self.get_live_scores()
-        return parse_scores_now(raw)
+        return parse_live_scores(raw)
 
     def convert_utc_to_local(self, utc_str: str) -> str:
         try:
