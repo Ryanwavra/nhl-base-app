@@ -1,6 +1,7 @@
 from utils.api_client import NHLApiClient
 from models.live_scores_model import parse_live_scores, should_show_game
 from models.user_pick_model import PickManager, UserPick
+from db import create_submission, add_pick, get_submissions
 from models.pick_evaluator import (
     evaluate_user_picks,
     get_highest_scoring_game_total,
@@ -57,7 +58,7 @@ def get_user_input(today_games):
     tiebreaker = int(input("Enter your tiebreaker guess (total goals in highest scoring game): "))
     return user_id, picks, tiebreaker
 
-def main():
+def submit_picks_to_db():
     client = NHLApiClient()
     pick_manager = PickManager()
 
@@ -79,35 +80,67 @@ def main():
     else:
         print("\n❌ Submission failed. Please check your inputs.")
 
-    #evalute picks & choose winner
-    def main():
-        client = NHLApiClient()
-        pick_manager = PickManager()
+#evalute picks & choose winner
+def evaluate_user_picks():
+    client = NHLApiClient()
+    pick_manager = PickManager()
 
-        raw_scores = client.get_live_scores()
-        final_scores = parse_live_scores(raw_scores)
+    raw_scores = client.get_live_scores()
+    final_scores = parse_live_scores(raw_scores)
 
-        submissions = pick_manager.submissions
-        if not submissions:
-            print("⚠️ No user submissions found.")
-            return
+    submissions = pick_manager.submissions
+    if not submissions:
+        print("⚠️ No user submissions found.")
+        return
 
-        results = evaluate_user_picks(submissions, final_scores)
-        if not results:
-            print("⚠️ No completed games to evaluate.")
-            return
+    results = evaluate_user_picks(submissions, final_scores)
+    if not results:
+        print("⚠️ No completed games to evaluate.")
+        return
 
-        max_correct = max(results.values())
-        tied_users = [submissions[uid] for uid, score in results.items() if score == max_correct]
+    max_correct = max(results.values())
+    tied_users = [submissions[uid] for uid, score in results.items() if score == max_correct]
 
-        if len(tied_users) > 1:
-            actual_total = get_highest_scoring_game_total(final_scores)
-            winners = resolve_tiebreaker(tied_users, actual_total)
-            print(f"\n🏆 Tiebreaker Total: {actual_total}")
-            print(f"🥇 Winner(s): {', '.join(winners)}")
-        else:
-            print(f"\n🥇 Winner: {tied_users[0].user_id}")
+    if len(tied_users) > 1:
+        actual_total = get_highest_scoring_game_total(final_scores)
+        winners = resolve_tiebreaker(tied_users, actual_total)
+        print(f"\n🏆 Tiebreaker Total: {actual_total}")
+        print(f"🥇 Winner(s): {', '.join(winners)}")
+    else:
+        print(f"\n🥇 Winner: {tied_users[0].user_id}")
 
+def collect_user_input():
+    """Prompt the user for ID, picks, and tiebreaker."""
+    user_id = input("Enter your user ID: ")
+    tiebreaker = int(input("Enter your tiebreaker guess (total goals in highest scoring game): "))
 
-if __name__ == "__main__":
-    main()
+    picks = []
+    while True:
+        game_id = input("Enter game ID (or 'done' to finish): ")
+        if game_id.lower() == "done":
+            break
+        team = input(f"Pick winner for {game_id}: ")
+        picks.append({"game_id": game_id, "picked_team": team})
+
+    return user_id, tiebreaker, picks
+
+def run_db_submission():
+    print("🏒 Welcome to the NHL Picks CLI 🏒")
+
+    # Step 1: Collect input
+    user_id, tiebreaker, picks = collect_user_input()
+
+    # Step 2: Create submission in DB
+    submission_id = create_submission(user_id, tiebreaker)
+    print(f"\n✅ Submission created with ID {submission_id}")
+
+    # Step 3: Store picks
+    for pick in picks:
+        add_pick(submission_id, pick["game_id"], pick["picked_team"])
+    print(f"✅ Stored {len(picks)} picks for submission {submission_id}")
+
+    # Step 4: Show all submissions (debug/confirmation)
+    all_subs = get_submissions()
+    print("\n📊 Current submissions in DB:")
+    for sub in all_subs:
+        print(sub)

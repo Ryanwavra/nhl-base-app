@@ -29,6 +29,7 @@ def parse_live_scores(raw: Dict[str, Any]) -> List[LiveScore]:
                 status = "Done"
 
             scores.append(LiveScore(
+                game_id=g.get("id") or g.get("gamePk"),
                 home_team=home.get("abbrev", "HOME"),
                 away_team=away.get("abbrev", "AWAY"),
                 home_score=home.get("score"),
