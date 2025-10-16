@@ -5,6 +5,7 @@ import pytz
 
 @dataclass
 class LiveScore:
+    game_id: str
     home_team: str
     away_team: str
     home_score: Optional[int]
